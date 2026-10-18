@@ -1,0 +1,15 @@
+# Dữ liệu gốc không đưa lên GitHub (tải từ UCI, kiểm tra bằng md5 trong README)
+data/*
+!data/.gitkeep
+
+# Checkpoint model: nặng (8–15 MB/run x 60 run) và sinh lại được từ config + split + seed
+*.keras
+*.h5
+
+# File rác của Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Kết quả smoke test (chạy thử 3 epoch) không phải kết quả thật
+results_smoke/
