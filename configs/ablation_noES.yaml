@@ -1,0 +1,9 @@
+# Ablation: KHÔNG early stopping -> chạy đủ 500 epoch (feedback 1.4, trường hợp 1).
+# Checkpoint vẫn giữ model có val_loss nhỏ nhất. Log ghi thêm test_acc_last
+# (model ở epoch cuối) để so "model tốt nhất" với "model cuối".
+experiment:
+  group: ablation_noES
+
+callbacks:
+  early_stopping:
+    enabled: false

@@ -1,0 +1,9 @@
+# Ablation: early stopping và checkpoint theo val_accuracy (feedback 1.4, trường hợp 3).
+experiment:
+  group: ablation_ES_valacc
+
+callbacks:
+  early_stopping:
+    monitor: val_accuracy
+  checkpoint:
+    monitor: val_accuracy

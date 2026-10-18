@@ -1,0 +1,7 @@
+# Ablation: projection shortcut KHÔNG có BatchNorm (feedback 1.5).
+# Chỉ ghi phần khác baseline.yaml.
+experiment:
+  group: ablation_noBN
+
+model:
+  shortcut_bn: false

@@ -1,0 +1,69 @@
+# =====================================================================
+# CẤU HÌNH BASELINE — nguồn sự thật duy nhất cho mọi run.
+# Các file ablation_*.yaml chỉ ghi phần KHÁC file này.
+# model.name và split.split_id do run.py điền khi chạy.
+# =====================================================================
+
+experiment:
+  group: baseline            # baseline | ablation_noBN | ablation_noES | ablation_ES_valacc
+
+data:
+  path: data/Dry_Bean_Dataset.xlsx   # UCI id 602; md5 được ghi vào mỗi split và mỗi dòng log
+  target: Class
+  # Thứ tự 16 cột = thứ tự trong file UCI. Ghi rõ vì với Conv1D thứ tự cột là một biến thí nghiệm.
+  feature_order:
+    - Area
+    - Perimeter
+    - MajorAxisLength
+    - MinorAxisLength
+    - AspectRation           # tên cột trong file UCI viết sai chính tả như vậy
+    - Eccentricity
+    - ConvexArea
+    - EquivDiameter
+    - Extent
+    - Solidity
+    - roundness              # viết thường trong file UCI
+    - Compactness
+    - ShapeFactor1
+    - ShapeFactor2
+    - ShapeFactor3
+    - ShapeFactor4
+
+split:
+  split_id: 0                # 0..4, run.py ghi đè
+  n_splits: 5                # paper dùng 10 lần hold-out; thầy yêu cầu 5 split
+  test_size: 0.2             # paper: 80/20 phân tầng
+  val_size: 0.1              # tỉ lệ tách từ phần TRAIN (paper không nêu -> tự chọn)
+  dir: splits
+
+model:
+  name: resnet1              # resnet1 | resnet2 | resnet3, run.py ghi đè
+  kernel_size: 3
+  shortcut_bn: true          # projection Conv1D 1x1 + BN
+  dense_l2: 0.01             # L2 CHỈ ở Dense ẩn (sửa lỗi cũ)
+  conv_l2: 0.0               # ghi rõ: Conv1D không có L2
+
+train:
+  seed: 0                    # seed khởi tạo trọng số, cố định cho mọi run
+  epochs: 500
+  deterministic: true        # tf.config.experimental.enable_op_determinism()
+  verbose: 0                 # 0 = im lặng, 2 = in 1 dòng mỗi epoch
+
+callbacks:
+  early_stopping:
+    enabled: true
+    monitor: val_loss
+    patience: 100
+  checkpoint:
+    monitor: val_loss        # best.keras = epoch có val_loss nhỏ nhất; test dùng model này
+
+# Siêu tham số riêng theo Table 2 của paper. load_config chép dòng tương ứng vào train.
+# Viết 0.0002 thay vì 2e-4 vì PyYAML đọc "2e-4" thành chuỗi.
+per_model:
+  resnet1: {optimizer: nadam, lr: 0.0002, batch_size: 1024}
+  resnet2: {optimizer: nadam, lr: 0.0001, batch_size: 512}
+  resnet3: {optimizer: adam,  lr: 0.0001, batch_size: 512}
+
+output:
+  runs_dir: results/runs
+  log_path: results/runs_log.csv
