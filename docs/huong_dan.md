@@ -55,13 +55,13 @@ run.py: model, split ───┘                          │
 
 ## 3. Thiết lập GitHub + Colab (làm một lần, ~15 phút)
 
-**Bước 1: tạo repo trống.** Vào github.com → nút **New** → Repository name `drybean-1d-resnet` → **không** tick "Add a README"
-(repo đã có lịch sử commit sẵn, nếu tạo thêm README trên GitHub thì lần push đầu sẽ bị xung đột) → Create.
+**Bước 1: tạo repo.** Repo: `github.com/trungdao-6969/DryBean_1D_ResNet`. Repo được tạo kèm README tự động, nên lần push
+**đầu tiên** dùng `--force` để thay lịch sử trên GitHub bằng lịch sử commit của repo này. Từ lần sau push bình thường, không dùng `--force`.
 
 **Bước 2: tạo token để Colab được push.** github.com → ảnh đại diện → **Settings** → **Developer settings** →
 **Personal access tokens** → **Fine-grained tokens** → **Generate new token**:
 - Token name: `colab-drybean`, Expiration: 90 days
-- Repository access: **Only select repositories** → chọn `drybean-1d-resnet`
+- Repository access: **Only select repositories** → chọn `DryBean_1D_ResNet`
 - Permissions → Repository permissions → **Contents: Read and write**
 - Generate → **copy token ngay** (chỉ hiện một lần)
 
@@ -75,14 +75,14 @@ from google.colab import drive; drive.mount('/content/drive')
 !cd /content/drive/MyDrive && unzip -q drybean-1d-resnet.zip && ls drybean-1d-resnet
 ```
 
-**Bước 5: push lần đầu.** Vẫn trong notebook đó (sửa `YOUR_GITHUB_USERNAME`):
+**Bước 5: push lần đầu.** Vẫn trong notebook đó:
 
 ```python
 import subprocess
 from google.colab import userdata
 token = userdata.get('GH_TOKEN')
 r = subprocess.run(f'cd /content/drive/MyDrive/drybean-1d-resnet && '
-                   f'git push https://{token}@github.com/YOUR_GITHUB_USERNAME/drybean-1d-resnet.git main',
+                   f'git push --force https://{token}@github.com/trungdao-6969/DryBean_1D_ResNet.git main',
                    shell=True, capture_output=True, text=True)
 print((r.stdout + r.stderr).replace(token, '***'))
 ```
